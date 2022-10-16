@@ -128,36 +128,40 @@ class AIPlayer:
         start_time = time.time()
 
         max_depth = 3
+        if(np.sum(state[0]) < (len(state[0])*(len(state[0][0])*1.5*0.65))):
+            max_depth = 3
+        elif(np.sum(state[0]) < (len(state[0])*(len(state[0][0])*1.5*0.8))):
+            max_depth = 5
+        else:
+            max_depth = 7
+
+
         valid_actions = get_valid_actions(self.player_number, state)
 
         max_val = -inf
         best_move = valid_actions[0]
         opp_player_num = 1 + self.player_number%2
+        n = len(state[0][0])
 
         for action in valid_actions:
             new_state = self.update_state(state, action, self.player_number)
             # new_state = self.update_state((state[0].copy(), state[1].copy()), action, player_num)
             val = self.minimax(max_depth, (new_state[0].copy(), new_state[1].copy()), -inf, inf, opp_player_num, start_time)
+
+            if(action[0] > n/4 and action[0] < 3*n/4): 
+                val = 0.7*val
+
             if(val > max_val):
                 max_val = val
                 best_move = action
 
-        # print(f"Time taken  {time.time()-start_time} ")        
+        print(np.sum(state[0])/(len(state[0])*(len(state[0][0])*1.5)))
+        print(f"Time taken2 {time.time()-start_time} ")        
 
         return best_move
 
-
-
-
-
-
-
-
-
     def get_expectimax_move(self, state: Tuple[np.array, Dict[int, Integer]]) -> Tuple[int, bool]:
         # Do the rest of your implementation here
-
-
 
         if(np.sum(state[0])<3):
             return ((len(state[0][0])//2, False))

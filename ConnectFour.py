@@ -18,7 +18,7 @@ from connect4.utils import get_pts, get_valid_actions, Integer
 
 # Local libs
 from connect4.players.ai import AIPlayer
-# from connect4.players.ai2 import AIPlayer as AIPlayer2
+from connect4.players.ai2 import AIPlayer as AIPlayer2
 from connect4.players.random import RandomPlayer
 from connect4.players.human import HumanPlayer
 
@@ -67,7 +67,6 @@ class Game:
 
         # https://stackoverflow.com/a/38159672
         root = tk.Tk()
-        # root.geometry("400x400")
         root.title('Extended Connect 4')
 
         self.current = tk.Label(root, text="Current:")
@@ -79,17 +78,17 @@ class Game:
         self.player2_string = tk.Label(root, text=player2.player_string)
         self.player2_string.pack()
 
-        height = m * 100
-        width = n * 100
+        height = m * 50
+        width = n * 50
         self.c = tk.Canvas(root, height=height, width=width)
         self.c.pack()
         for j in range(n):
             column = []
-            row = j * 100
+            row = j * 50
             for i in range(m):
-                col = i * 100
+                col = i * 50
                 c = board[i][j]
-                column.append(self.c.create_oval(row, col, row + 100, col + 100, fill=self.colors[c]))
+                column.append(self.c.create_oval(row, col, row + 50, col + 50, fill=self.colors[c]))
             self.gui_board.append(column)
 
         thread = Thread(target=self.threaded_function, args=(100000,))
@@ -115,15 +114,34 @@ class Game:
             sleep(0.01)
             if self.game_over:
                 with open('logs.txt', 'w') as log_file:
-                    a1 = get_pts(1, self.state[0])
-                    a2 = get_pts(2, self.state[0])
                     s = 'Game Over\n'
                     s += f'Player 1 Score: {get_pts(1, self.state[0])}\n'
                     s += f'Player 2 Score: {get_pts(2, self.state[0])}\n'
                     log_file.write(s)
-                    print((a1-a2)/a1)
                     print(s)
+                # with open('stats.txt', 'a') as stats_file:
+                #     s = 'Game Over\n'
+                #     s += f'Player 1 Score: {get_pts(1, self.state[0])}\n'
+                #     s += f'Player 2 Score: {get_pts(2, self.state[0])}\n'
+                #     # if self.players[0].type == 'ai':
+                #     s += f'Player 1 won by Percentage diff: {(get_pts(1, self.state[0]) - get_pts(2, self.state[0]))/get_pts(1, self.state[0])}\n'
+                #     # else:
+                #     s += f'Player 2 won by Percentage diff: {(get_pts(2, self.state[0]) - get_pts(1, self.state[0]))/get_pts(2, self.state[0])}\n'
+                #     stats_file.write(s)
+                #     print(s)
+                #     print(self.players)
+            
+                # s = 'Game Over\n'
+                # s += f'Player 1 Score: {get_pts(1, self.state[0])}\n'
+                # s += f'Player 2 Score: {get_pts(2, self.state[0])}\n'
+                # if self.players[0].type == 'ai':
+                s = f'Player 1 won by Percentage diff: {(get_pts(1, self.state[0]) - get_pts(2, self.state[0]))/get_pts(1, self.state[0])}\n'
+                # else:
+                s += f'Player 2 won by Percentage diff: {(get_pts(2, self.state[0]) - get_pts(1, self.state[0]))/get_pts(2, self.state[0])}\n'
+                print(s)
+                # print(self.players)
                 break
+            
 
     def make_move(self):
         current_player = self.players[self.current_turn]
@@ -226,6 +244,8 @@ def main(player1: str, player2: str, init_fine_name: str, time: int):
     def make_player(name, num):
         if name == 'ai':
             return AIPlayer(num, time)
+        elif name == 'ai2':
+            return AIPlayer2(num, time)
         elif name == 'random':
             return RandomPlayer(num)
         elif name == 'human':
@@ -239,7 +259,7 @@ def main(player1: str, player2: str, init_fine_name: str, time: int):
 
 
 if __name__ == '__main__':
-    player_types = ['ai', 'random', 'human']
+    player_types = ['ai', 'ai2', 'random', 'human']
     parser = argparse.ArgumentParser()
     parser.add_argument('player1', choices=player_types)
     parser.add_argument('player2', choices=player_types)
