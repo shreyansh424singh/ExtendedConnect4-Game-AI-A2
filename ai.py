@@ -25,6 +25,9 @@ class AIPlayer:
         self.type = 'ai'
         self.player_string = 'Player {}:ai'.format(player_number)
         self.time = time
+    
+    def activation_fn(self, x):
+        return 1/(1 + np.exp(-x))
 
     def update_state(self, state_1: Tuple[np.array, Dict[int, Integer]], action: Tuple[int, bool], player_number: int):
         # logging.debug(f"action: {action} player: {player_number} popout: {state[1][player_number].get_int()}")
@@ -81,10 +84,14 @@ class AIPlayer:
 
     # returns the best utility it can get
     def minimax(self, depth, state: Tuple[np.array, Dict[int, Integer]], alpha, beta, player_num, start_time) -> int:
+        if depth == 0 or (time.time() - start_time > self.time - 0.2):
+            # return get_pts(player_num, state[0])
+            return get_pts(self.player_number, state[0]) - get_pts(1 + self.player_number%2, state[0])
+        
         valid_actions = get_valid_actions(player_num, state)
         opp_player_num = 1 + player_num%2
 
-        if depth == 0 or len(valid_actions) == 0 or (time.time()-start_time) < 0.2:
+        if len(valid_actions) == 0:
             # return get_pts(player_num, state[0])
             return get_pts(self.player_number, state[0]) - get_pts(self.player_number%2 + 1, state[0])
 
@@ -128,36 +135,56 @@ class AIPlayer:
         start_time = time.time()
 
         max_depth = 3
+        if(np.sum(state[0]) < (len(state[0])*(len(state[0][0])*1.5*0.65))):
+            max_depth = 3
+        elif(np.sum(state[0]) < (len(state[0])*(len(state[0][0])*1.5*0.8))):
+            max_depth = 5
+        else:
+            max_depth = 7
+
+
         valid_actions = get_valid_actions(self.player_number, state)
 
         max_val = -inf
         best_move = valid_actions[0]
         opp_player_num = 1 + self.player_number%2
+        n = len(state[0][0])
+
+        weight = 1.2
+        if(np.sum(state[0]) < (len(state[0])*(len(state[0][0])*1.5*0.5))):
+            weight = 1.2
+        else:
+            weight = 1
 
         for action in valid_actions:
             new_state = self.update_state(state, action, self.player_number)
             # new_state = self.update_state((state[0].copy(), state[1].copy()), action, player_num)
             val = self.minimax(max_depth, (new_state[0].copy(), new_state[1].copy()), -inf, inf, opp_player_num, start_time)
+
+            if(np.sum(state[0]) < (len(state[0])*(len(state[0][0])*1.5*0.5))):
+                val = self.activation_fn(val)
+
+            if(action[0] >= n//4 and action[0] < 3*n//4):
+                val = weight * val
+                # if(val < 0):
+                #     val = val/weight
+                # else:
+                #     val = weight*val
+
+            print(f"action {action} val {val} ")
+
             if(val > max_val):
                 max_val = val
                 best_move = action
 
-        # print(f"Time taken  {time.time()-start_time} ")        
+        # print(weight)
+        # print(np.sum(state[0])/(len(state[0])*(len(state[0][0])*1.5)))
+        print(f"Time taken2 {time.time()-start_time} ")        
 
         return best_move
 
-
-
-
-
-
-
-
-
     def get_expectimax_move(self, state: Tuple[np.array, Dict[int, Integer]]) -> Tuple[int, bool]:
         # Do the rest of your implementation here
-
-
 
         if(np.sum(state[0])<3):
             return ((len(state[0][0])//2, False))
