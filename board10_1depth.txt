@@ -1,0 +1,47 @@
+10*10 size
+7 popouts
+10 sec
+max_depth = 1 
+
+
+python3 -m connect4.ConnectFour ai random connect4/initial_states/case10.txt --time 10
+
+Game Over
+Player 1 Score: 477
+Player 2 Score: 214
+
+Game Over
+Player 1 Score: 460
+Player 2 Score: 192
+
+Game Over
+Player 1 Score: 522
+Player 2 Score: 363
+
+Game Over
+Player 1 Score: 425
+Player 2 Score: 243
+
+Game Over
+Player 1 Score: 418
+Player 2 Score: 222
+
+Game Over
+Player 1 Score: 341
+Player 2 Score: 303
+
+Game Over
+Player 1 Score: 407
+Player 2 Score: 321
+
+Game Over
+Player 1 Score: 426
+Player 2 Score: 269
+
+Game Over
+Player 1 Score: 495
+Player 2 Score: 367
+
+Game Over
+Player 1 Score: 474
+Player 2 Score: 159

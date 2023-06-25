@@ -1,0 +1,58 @@
+10*10 size
+7 popouts
+10 sec
+modified max_depth
+if(pop_outs < 4):
+            max_depth = 1
+        else:
+            max_depth = 2
+
+python3 -m connect4.ConnectFour ai random connect4/initial_states/case10.txt --time 10
+
+Game Over
+Player 1 Score: 456
+Player 2 Score: 294
+
+Game Over
+Player 1 Score: 423
+Player 2 Score: 204
+
+Game Over
+Player 1 Score: 388
+Player 2 Score: 275
+
+Game Over
+Player 1 Score: 437
+Player 2 Score: 253
+
+Game Over
+Player 1 Score: 395
+Player 2 Score: 259
+
+Game Over
+Player 1 Score: 441
+Player 2 Score: 178
+
+Game Over
+Player 1 Score: 524
+Player 2 Score: 242
+
+Game Over
+Player 1 Score: 394
+Player 2 Score: 172
+
+Game Over
+Player 1 Score: 394
+Player 2 Score: 247
+
+Game Over
+Player 1 Score: 570
+Player 2 Score: 254
+
+Game Over
+Player 1 Score: 385
+Player 2 Score: 227
+
+Game Over
+Player 1 Score: 549
+Player 2 Score: 210
